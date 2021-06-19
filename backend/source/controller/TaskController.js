@@ -23,6 +23,16 @@ class TaskController {
             });
     }
 
+    async all(request, response) {
+        await TaskModel.find({ macAddress: {'$in': request.body.macAddress}})
+            .sort('when')
+            .then(res => {
+                return response.status(200).json(res);
+            })
+            .catch(error => {
+                return response.status(500).json(error); 
+            });
+    }
 }
 
 module.exports = new TaskController();
