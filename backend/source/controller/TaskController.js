@@ -33,6 +33,20 @@ class TaskController {
                 return response.status(500).json(error); 
             });
     }
+
+    async show(request, response) {
+
+        if (request.params.id.length != "60ce008accc27909ccae9a15".length) return response.status(500).json({error: "This is not a Task ID"});
+
+        await TaskModel.findById(request.params.id)
+            .then(res => {
+                if (res) return response.status(200).json(res);
+                else return response.status(404).json({error: "task does not exist"});
+            })
+            .catch(error => {
+                return response.status(500).json(error);
+            })
+    }
 }
 
 module.exports = new TaskController();
