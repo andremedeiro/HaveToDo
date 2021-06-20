@@ -13,6 +13,8 @@ function Home() {
 
   const [filterActived, setFilterActived] = useState('all');
   const [tasks, setTasks] = useState([]);
+  const [haveLate, setHaveLate] = useState(false);
+  const [color, setColor] = useState('var(--azul)');
 
   async function loadTasks() {
     await api.get(`/task/filter/${filterActived}/11:11:11:11:11:11`)
@@ -21,13 +23,52 @@ function Home() {
       })
   }
 
+  async function lateVerify() {
+    await api.get(`/task/filter/late/11:11:11:11:11:11`)
+      .then(response => {
+        setHaveLate(response.data.length > 0);
+      })
+  }
+
+  async function colorVerify() {
+
+    let concludeTasksCount;
+    let lateTasksCount;
+    let allTasksCount;
+
+    await api.get(`/task/filter/late/11:11:11:11:11:11`)
+      .then(response => {
+        lateTasksCount = response.data.length;
+      });
+    
+    await api.get(`/task/filter/conclude/11:11:11:11:11:11`)
+      .then(response => {
+        concludeTasksCount = response.data.length;
+      });
+    
+    await api.get(`/task/filter/all/11:11:11:11:11:11`)
+      .then(response => {
+        allTasksCount = response.data.length;
+      });
+    
+    if(allTasksCount === concludeTasksCount) setColor('var(--verde)');
+    if(allTasksCount === lateTasksCount) setColor('var(--vermelho)');
+  
+  }
+
+  function Notification() {
+    setFilterActived('late');
+  }
+
   useEffect(() => {
     loadTasks();
+    lateVerify();
+    colorVerify();
   }, [filterActived])
 
   return (  
     <S.Container>
-      <Header/>
+      <Header haveLate={haveLate} clickNotification={Notification} color={color}/>
 
       <S.FilterArea>
 
@@ -39,7 +80,7 @@ function Home() {
 
       </S.FilterArea>
 
-      <h1>Tarefas</h1>
+      <h1 color={color}>{filterActived == 'late' ? 'Tarefas Atrasadas' : 'Tarefas'}</h1>
 
       <S.TaskArea>
         {
@@ -49,7 +90,7 @@ function Home() {
         }
       </S.TaskArea>
 
-      <Footer/>
+      <Footer color={color}/>
     </S.Container>
   );
 }

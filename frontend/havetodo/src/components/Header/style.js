@@ -4,7 +4,7 @@ export const Navbar = styled.div `
     width: 100%;
     height: 95px;
     background: #F5F5F1;
-    border-bottom: 5px solid var(--situation-color);
+    border-bottom: 5px solid ${props => props.color};
     align-items: center;
     justify-content: center;
     display: flex;
@@ -18,7 +18,7 @@ export const Navbar = styled.div `
     }
 
     h1 span {
-        color: var(--situation-color);
+        color: ${props => props.color};
     }
 
     #logo {
@@ -30,18 +30,23 @@ export const Navbar = styled.div `
     a {
         float: right;
         margin: 30px;
+        cursor: pointer;
     }
 
-    a span {
+    .notification {
         background: var(--vermelho);
         border-radius: 100%;
         height: 13px;
         width: 13px;
-        display: block;
+        display: none;
         position: absolute;
         top: 32px;
         right: 83px;
         z-index: 2;
+    }
+
+    .notification.active {
+        display: block;
     }
 
     .sino {

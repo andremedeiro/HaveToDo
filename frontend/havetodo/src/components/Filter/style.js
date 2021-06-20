@@ -13,6 +13,7 @@ export const Container = styled.div `
     transition: 0.3s;
     box-shadow: ${props => props.actived ? '0px 6px 6px rgba(70, 80, 98, 0.08)' : '0'};
     transform: ${props => props.actived ? 'translateY(-3px)' : '0'};
+    cursor: pointer;
 
     h3 {
         font-size: 1.6rem;

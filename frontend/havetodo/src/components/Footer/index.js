@@ -1,9 +1,9 @@
 import React from 'react';
 import * as S from './style';
 
-function Header() {
+function Header({color}) {
   return (
-      <S.Footer></S.Footer>
+      <S.Footer color={color}/>
   );
 }
 

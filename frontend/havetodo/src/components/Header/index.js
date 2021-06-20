@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
 import * as S from './style';
+import setFilterActived from '../../view/Home/index';
 
 import sino from '../../assets/sino.svg';
 
-function Header() {
+function Header({haveLate, clickNotification, color}) {
 
     const [sideBar, setSidebar] = useState(false);
     const showSidebar = () => setSidebar(!sideBar);
 
-  return (
-      <S.Navbar>
+    return (
+        <S.Navbar color={color}>
             <div id="logo"><h1>Have<span>Todo</span></h1></div>
-            <a href="#"><span></span><img className="sino" src={sino} alt="Notificação"/></a>
+            <a onClick={clickNotification}><span className={haveLate ? 'notification active' : 'notification'}></span><img className="sino" src={sino} alt="Notificação"/></a>
 
             <div className={sideBar ? 'menu close' : 'menu'} onClick={showSidebar}>
                 <div className="one"></div>
@@ -30,7 +31,7 @@ function Header() {
                     <h1>Have<span>Todo</span></h1>
                 </nav>
             </S.Menu>
-      </S.Navbar>
+        </S.Navbar>
   );
 }
 

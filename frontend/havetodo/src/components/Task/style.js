@@ -2,21 +2,19 @@ import styled from 'styled-components';
 
 export const Container = styled.div `
 
-    --color: ${props => props.state || 'var(--azul)'};
-
     width: 232px;
     height: 96px;
     margin: 10px;
     background: #F5F5F1;
     border-radius: 5px;
     transition: 0.3s;
-    border: 3px solid var(--color);
+    border: 3px solid ${props => props.state || 'var(--azul)'};;
 
     h3 {
         margin:0;
         padding: 0;
         font-size: 1.6rem;
-        color: var(--color);
+        color: ${props => props.state || 'var(--azul)'};;
         font-weight: bold;
         text-align: left;
         align-self: left;
@@ -27,7 +25,7 @@ export const Container = styled.div `
         margin:0;
         padding: 0;
         font-size: 1.2rem;
-        color: var(--color);
+        color: ${props => props.state || 'var(--azul)'};;
         font-weight: 600;
         text-align: left;
         align-self: left; 
