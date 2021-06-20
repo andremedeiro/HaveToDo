@@ -59,7 +59,7 @@ class TaskController {
 
     }
 
-    async conclude(request, response) {
+    async setConclude(request, response) {
 
         if (request.params.id.length != "60ce008accc27909ccae9a15".length) return response.status(500).json({error: "This is not a Task ID"});
 
@@ -73,7 +73,18 @@ class TaskController {
     }
 
     async late(request, response) {
-        await TaskModel.find({'when': {'$lt': timeCurrent}, 'macAddress': {'$in': request.params.macAddress}})
+        await TaskModel.find({'when': {'$lt': timeCurrent}, 'isConcluded': false, 'macAddress': {'$in': request.params.macAddress}})
+            .sort('when')
+            .then(res => {
+                return response.status(200).json(res);
+            })
+            .catch(error => {
+                return response.status(500).json(error); 
+            });
+    }
+
+    async conclude(request, response) {
+        await TaskModel.find({'isConcluded': {'$eq': true}, 'macAddress': {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);
