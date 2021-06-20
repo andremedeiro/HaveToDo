@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import {format} from 'date-fns'; 
+import {format, isPast} from 'date-fns'; 
 import * as S from './style';
 
 import api from '../../services/api';
@@ -61,8 +61,8 @@ function Home() {
         allTasksCount = response.data.length;
       });
     
-    if(allTasksCount === concludeTasksCount) setColor('var(--verde)');
     if(allTasksCount === lateTasksCount) setColor('var(--vermelho)');
+    if(allTasksCount === concludeTasksCount && allTasksCount === 0) setColor('var(--verde)');
   
   }
 
@@ -74,7 +74,11 @@ function Home() {
     setIsModalTaskVisible(open);
   }
 
-  async function save(id) {
+  async function Save(id) {
+    if(!title) return alert("É preciso informar o título");
+    else if(!date) return alert("É preciso informar a data");
+    else if(!time) return alert("É preciso informar o dia de finalização");
+
     if(id != null) {
       await api.put(`/task/${id}`,{
         macAddress,
@@ -94,6 +98,19 @@ function Home() {
         isConcluded
       }).then(() => setModalTask(false))
     }
+
+    loadTasks();
+    lateVerify();
+    colorVerify();
+  }
+
+  async function Delete(id) {
+    if(id != null) {
+      await api.delete(`/task/${id}`).then(() => {
+        setModalTask(false);
+        alert('Tarefa Excluída com Sucesso!');
+      })
+    } else alert('Não é possível excluir uma tarefa que não existe.');
 
     loadTasks();
   }
@@ -173,12 +190,12 @@ function Home() {
               <div className="buttons">
                 <div className="action">
                   <a id="conclude-task" style={isConcluded? {color: 'var(--branco)', background: 'var(--vermelho)'} : {color: 'var(--branco)', background: 'var(--verde)'}} onClick={() => setIsConcluded(!isConcluded)} >{isConcluded? "Revogar Conclusão" : "Concluir Tarefa"}</a>
-                  <a style={{color: 'var(--branco)', background: 'var(--vermelho)'}}>Excluir Tarefa</a>
+                  <a style={{color: 'var(--branco)', background: 'var(--vermelho)'}} onClick={() => Delete(id)}>Excluir Tarefa</a>
                 </div>
 
                 <div className="close">
                   <button style={{color: 'var(--cinza)', background: 'none'}} onClick={() => setModalTask(false)}>Cancelar</button>
-                  <a style={{color: 'var(--branco)', background: 'var(--azul)'}} onClick={() => save(id)}>Salvar</a>
+                  <a style={{color: 'var(--branco)', background: 'var(--azul)'}} onClick={() => Save(id)}>Salvar</a>
                 </div>
               </div>
 
