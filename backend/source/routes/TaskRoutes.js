@@ -10,6 +10,8 @@ router.put('/:id', TaskValidation, TaskController.update);
 router.get('/:id', TaskController.show);
 router.delete('/:id', TaskController.delete);
 
+router.put('/:id/:conclude', TaskController.conclude);
+
 router.get('/filter/all', MacValidation, TaskController.all);
 
 module.exports = router;

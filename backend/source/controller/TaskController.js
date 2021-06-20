@@ -62,6 +62,19 @@ class TaskController {
             })
 
     }
+
+    async conclude(request, response) {
+
+        if (request.params.id.length != "60ce008accc27909ccae9a15".length) return response.status(500).json({error: "This is not a Task ID"});
+
+        await TaskModel.findByIdAndUpdate({'_id': request.params.id}, {'isConcluded': request.params.conclude}, {new: true})
+            .then(res => {
+                return response.status(200).json(res);
+            })
+            .catch(error => {
+                return response.status(500).json(error); 
+            });
+    }
 }
 
 module.exports = new TaskController();
