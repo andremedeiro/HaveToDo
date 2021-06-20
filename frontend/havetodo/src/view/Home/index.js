@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
+import {format} from 'date-fns'; 
 import * as S from './style';
 
 import api from '../../services/api';
@@ -15,6 +16,15 @@ function Home() {
   const [tasks, setTasks] = useState([]);
   const [haveLate, setHaveLate] = useState(false);
   const [color, setColor] = useState('var(--azul)');
+  const [isModalTaskVisible, setIsModalTaskVisible] = useState(false);
+  const [id, setId] = useState();
+  const [isConcluded, setIsConcluded] = useState(false);
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [date, setDate] = useState();
+  const [time, setTime] = useState();
+  const [category, setCategory] = useState();
+  const [macAddress, setMacAddress] = useState('11:11:11:11:11:11');
 
   async function loadTasks() {
     await api.get(`/task/filter/${filterActived}/11:11:11:11:11:11`)
@@ -60,6 +70,50 @@ function Home() {
     setFilterActived('late');
   }
 
+  function setModalTask(open) {
+    setIsModalTaskVisible(open);
+  }
+
+  async function save(id) {
+    if(id != null) {
+      await api.put(`/task/${id}`,{
+        macAddress,
+        title,
+        description,
+        when: `${date}T${time}:00.000`,
+        category,
+        isConcluded
+      }).then(() => setModalTask(false))
+    } else {
+      await api.post('/task',{
+        macAddress,
+        title,
+        description,
+        when: `${date}T${time}:00.000`,
+        category,
+        isConcluded
+      }).then(() => setModalTask(false))
+    }
+
+    loadTasks();
+  }
+
+  async function loadTaskDetails(id) {
+    await api.get(`/task/${id}`)
+      .then(response => {
+        setId(response.data._id);
+        setIsConcluded(response.data.isConcluded);
+        setTitle(response.data.title);
+        setDescription(response.data.description);
+        const when = response.data.when;
+        setDate(format(new Date(when), 'yyyy-MM-dd'));
+        setTime(format(new Date(when), 'HH:mm'));
+        setCategory(response.data.category);
+      })
+
+    setModalTask(true);
+  }
+
   useEffect(() => {
     loadTasks();
     lateVerify();
@@ -68,7 +122,7 @@ function Home() {
 
   return (  
     <S.Container>
-      <Header haveLate={haveLate} clickNotification={Notification} color={color}/>
+      <Header haveLate={haveLate} clickNotification={Notification} color={color} openTask={() => setModalTask(true)}/>
 
       <S.FilterArea>
 
@@ -80,17 +134,60 @@ function Home() {
 
       </S.FilterArea>
 
-      <h1 color={color}>{filterActived == 'late' ? 'Tarefas Atrasadas' : 'Tarefas'}</h1>
+      <h1 style={filterActived === 'late' ? {color:'var(--vermelho)'} : {color:'var(--azul)'}}>{filterActived === 'late' ? 'Tarefas Atrasadas' : 'Tarefas'}</h1>
 
       <S.TaskArea>
         {
           tasks.map(t => (
-            <Task title={t.title} when={t.when} category={t.category} isConcluded={t.isConcluded}/>
+            <a onClick={() => loadTaskDetails(t._id)}><Task title={t.title} when={t.when} category={t.category} isConcluded={t.isConcluded}/></a>
           ))
         }
       </S.TaskArea>
 
       <Footer color={color}/>
+
+      {isModalTaskVisible? <S.FormTask className={isModalTaskVisible? 'active' : ''}>
+        <div className="area">
+          <div className="title" style={isConcluded? {background: 'var(--verde)'} : {background: 'var(--azul)'}}>
+            <h1>{isConcluded? "Tarefa Concluída" : "Tarefa"}</h1>
+          </div>
+          <div className="form">
+            <form>
+              <div className="inputs">
+                <label>Título da Tarefa</label>
+                <input type="text" onChange={e => setTitle(e.target.value)} value={title} maxLength="50" required></input>
+
+                <label>Descrição</label>
+                <textarea onChange={e => setDescription(e.target.value)} value={description}></textarea>
+
+                <label>Data</label>
+                <input type="date" onChange={e => setDate(e.target.value)} value={date} required></input>
+
+                <label>Hora</label>
+                <input type="time" onChange={e => setTime(e.target.value)} value={time} required></input>
+
+                <label>Categoria</label>
+                <input type="text" onChange={e => setCategory(e.target.value)} value={category} required></input>
+              </div>
+
+              <div className="buttons">
+                <div className="action">
+                  <a id="conclude-task" style={isConcluded? {color: 'var(--branco)', background: 'var(--vermelho)'} : {color: 'var(--branco)', background: 'var(--verde)'}} onClick={() => setIsConcluded(!isConcluded)} >{isConcluded? "Revogar Conclusão" : "Concluir Tarefa"}</a>
+                  <a style={{color: 'var(--branco)', background: 'var(--vermelho)'}}>Excluir Tarefa</a>
+                </div>
+
+                <div className="close">
+                  <button style={{color: 'var(--cinza)', background: 'none'}} onClick={() => setModalTask(false)}>Cancelar</button>
+                  <a style={{color: 'var(--branco)', background: 'var(--azul)'}} onClick={() => save(id)}>Salvar</a>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </S.FormTask> : null}
+
+
     </S.Container>
   );
 }

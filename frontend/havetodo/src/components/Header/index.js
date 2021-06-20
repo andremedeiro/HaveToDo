@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import * as S from './style';
-import setFilterActived from '../../view/Home/index';
 
 import sino from '../../assets/sino.svg';
 
-function Header({haveLate, clickNotification, color}) {
+function Header({haveLate, clickNotification, color, openTask}) {
 
     const [sideBar, setSidebar] = useState(false);
     const showSidebar = () => setSidebar(!sideBar);
@@ -23,8 +22,8 @@ function Header({haveLate, clickNotification, color}) {
             <S.Menu>
                 <nav className={sideBar ? 'menu-toggle on' : 'menu-toggle'}>
                     <ul>
-                        <li><a className="active" href="#">Home</a></li>
-                        <li><a href="#">Nova Tarefa</a></li>
+                        <li><a className="active">Home</a></li>
+                        <li><a onClick={openTask}>Nova Tarefa</a></li>
                         <li><a href="#">Sincronize Celular</a></li>
                     </ul>
 

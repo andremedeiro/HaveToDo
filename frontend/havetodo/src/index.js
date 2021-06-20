@@ -4,7 +4,7 @@ import Home from './view/Home';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home />
+    <Home/>
   </React.StrictMode>,
   document.getElementById('root')
 );
