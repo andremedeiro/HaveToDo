@@ -6,7 +6,6 @@ const TaskValidation = async (request, response, next) => {
 
     if (!macAddress) return response.status(400).json({error: 'macAddress is necessary'});
     else if (!title) return response.status(400).json({error: 'title is necessary'});
-    else if (!description) return response.status(400).json({error: 'description is necessary'});
     else if (!when) return response.status(400).json({error: 'when is necessary'});
     else if (isPast(new Date(when))) return response.status(400).json({error: 'date or time has already been passed'});
     else next();
