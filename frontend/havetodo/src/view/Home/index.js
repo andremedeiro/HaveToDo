@@ -71,6 +71,15 @@ function Home() {
   }
 
   function setModalTask(open) {
+    if(!open) {
+      setId('');
+      setIsConcluded('');
+      setTitle('');
+      setDescription('');
+      setDate('');
+      setTime('');
+      setCategory('');
+    }
     setIsModalTaskVisible(open);
   }
 
@@ -89,6 +98,9 @@ function Home() {
         isConcluded
       }).then(() => setModalTask(false))
     } else {
+
+      if (isPast(new Date(`${date}T${time}:00.000`))) return alert("Esta data já foi passada.");
+
       await api.post('/task',{
         macAddress,
         title,
@@ -100,7 +112,6 @@ function Home() {
     }
 
     loadTasks();
-    lateVerify();
     colorVerify();
   }
 
