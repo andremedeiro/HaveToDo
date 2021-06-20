@@ -17,9 +17,13 @@ class TaskController {
     }
 
     async update(request, response) {
+
+        if (request.params.id.length != "60ce008accc27909ccae9a15".length) return response.status(500).json({error: "This is not a Task ID"});
+
         await TaskModel.findByIdAndUpdate({'_id': request.params.id}, request.body, {new: true})
             .then(res => {
-                return response.status(200).json(res);
+                if (res) return response.status(200).json(res);
+                else return response.status(404).json({error: "task does not exist"});
             })
             .catch(error => {
                 return response.status(500).json(error); 
