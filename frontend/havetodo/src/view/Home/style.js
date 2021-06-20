@@ -12,7 +12,6 @@ export const Container = styled.div `
 
 export const FilterArea = styled.div `
     width: 100%;
-    height: 100px;
     display: grid;
     grid-template-columns: repeat(auto-fit, 232px);
     grid-column-gap: 35px;

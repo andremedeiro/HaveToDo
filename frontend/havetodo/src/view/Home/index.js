@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as S from './style';
+
+import api from '../../services/api';
 
 // Components
 import Header from '../../components/Header';
@@ -9,10 +11,21 @@ import Task from '../../components/Task';
 
 function Home() {
 
-  const [filterActived, setFilterActived] = useState('today');
+  const [filterActived, setFilterActived] = useState('all');
+  const [tasks, setTasks] = useState([]);
 
-  return (
-    
+  async function loadTasks() {
+    await api.get(`/task/filter/${filterActived}/11:11:11:11:11:11`)
+      .then(response => {
+        setTasks(response.data);
+      })
+  }
+
+  useEffect(() => {
+    loadTasks();
+  }, [filterActived])
+
+  return (  
     <S.Container>
       <Header/>
 
@@ -29,12 +42,11 @@ function Home() {
       <h1>Tarefas</h1>
 
       <S.TaskArea>
-
-        <Task title="Comprar Pão" date="10/12/2020" time="17h00" category="Vida" state={"var(--verde)"}/>
-        <Task title="Pregar na Christus" date="10/12/2020" time="17h00" category="Igreja" state={"var(--vermelho)"}/>
-        <Task title="Ir ao Médico" date="10/12/2020" time="17h00" category="Saúde"/>
-
-
+        {
+          tasks.map(t => (
+            <Task title={t.title} when={t.when} category={t.category} isConcluded={t.isConcluded}/>
+          ))
+        }
       </S.TaskArea>
 
       <Footer/>

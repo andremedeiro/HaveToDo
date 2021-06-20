@@ -10,7 +10,7 @@ export const Navbar = styled.div `
     display: flex;
 
     h1 {
-        padding: 0px;
+        padding: 0px !important;
         margin: auto;
         font-weight: 700;
         color: var(--azul);
