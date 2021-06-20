@@ -1,5 +1,7 @@
 const TaskModel = require('../model/TaskModel');
 
+const timeCurrent = new Date();
+
 class TaskController {
 
     async create(request, response) {
@@ -68,6 +70,17 @@ class TaskController {
         if (request.params.id.length != "60ce008accc27909ccae9a15".length) return response.status(500).json({error: "This is not a Task ID"});
 
         await TaskModel.findByIdAndUpdate({'_id': request.params.id}, {'isConcluded': request.params.conclude}, {new: true})
+            .then(res => {
+                return response.status(200).json(res);
+            })
+            .catch(error => {
+                return response.status(500).json(error); 
+            });
+    }
+
+    async late(request, response) {
+        await TaskModel.find({'when': {'$lt': timeCurrent}, 'macAddress': {'$in': request.body.macAddress}})
+            .sort('when')
             .then(res => {
                 return response.status(200).json(res);
             })
