@@ -73,7 +73,7 @@ class TaskController {
     }
 
     async late(request, response) {
-        await TaskModel.find({'when': {'$lt': timeCurrent}, 'macAddress': {'$in': request.body.macAddress}})
+        await TaskModel.find({'when': {'$lt': timeCurrent}, 'macAddress': {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);
@@ -84,7 +84,7 @@ class TaskController {
     }
 
     async all(request, response) {
-        await TaskModel.find({ macAddress: {'$in': request.body.macAddress}})
+        await TaskModel.find({ macAddress: {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);
@@ -95,7 +95,7 @@ class TaskController {
     }
 
     async today(request, response) {
-        await TaskModel.find({'when': {'$gte': startOfDay(timeCurrent), '$lt': endOfDay(timeCurrent)}, 'macAddress': {'$in': request.body.macAddress}})
+        await TaskModel.find({'when': {'$gte': startOfDay(timeCurrent), '$lt': endOfDay(timeCurrent)}, 'macAddress': {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);
@@ -106,7 +106,7 @@ class TaskController {
     }
 
     async week(request, response) {
-        await TaskModel.find({'when': {'$gte': startOfWeek(timeCurrent), '$lt': endOfWeek(timeCurrent)}, 'macAddress': {'$in': request.body.macAddress}})
+        await TaskModel.find({'when': {'$gte': startOfWeek(timeCurrent), '$lt': endOfWeek(timeCurrent)}, 'macAddress': {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);
@@ -117,7 +117,7 @@ class TaskController {
     }
 
     async month(request, response) {
-        await TaskModel.find({'when': {'$gte': startOfMonth(timeCurrent), '$lt': endOfMonth(timeCurrent)}, 'macAddress': {'$in': request.body.macAddress}})
+        await TaskModel.find({'when': {'$gte': startOfMonth(timeCurrent), '$lt': endOfMonth(timeCurrent)}, 'macAddress': {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);
@@ -128,7 +128,7 @@ class TaskController {
     }
 
     async year(request, response) {
-        await TaskModel.find({'when': {'$gte': startOfYear(timeCurrent), '$lt': endOfYear(timeCurrent)}, 'macAddress': {'$in': request.body.macAddress}})
+        await TaskModel.find({'when': {'$gte': startOfYear(timeCurrent), '$lt': endOfYear(timeCurrent)}, 'macAddress': {'$in': request.params.macAddress}})
             .sort('when')
             .then(res => {
                 return response.status(200).json(res);

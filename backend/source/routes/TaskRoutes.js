@@ -3,19 +3,18 @@ const router = express.Router();
 
 const TaskController = require('../controller/TaskController');
 const TaskValidation = require('../middleware/TaskValidation');
-const MacValidation = require('../middleware/MacValidation');
 
 router.post('/', TaskValidation, TaskController.create);
 router.put('/:id', TaskValidation, TaskController.update);
 router.get('/:id', TaskController.show);
 router.delete('/:id', TaskController.delete);
 
-router.get('/filter/late', MacValidation, TaskController.late);
-router.get('/filter/all', MacValidation, TaskController.all);
-router.get('/filter/today', MacValidation, TaskController.today);
-router.get('/filter/week', MacValidation, TaskController.week);
-router.get('/filter/month', MacValidation, TaskController.month);
-router.get('/filter/year', MacValidation, TaskController.year);
+router.get('/filter/late/:macAddress', TaskController.late);
+router.get('/filter/all/:macAddress', TaskController.all);
+router.get('/filter/today/:macAddress', TaskController.today);
+router.get('/filter/week/:macAddress', TaskController.week);
+router.get('/filter/month/:macAddress', TaskController.month);
+router.get('/filter/year/:macAddress', TaskController.year);
 
 router.put('/:id/:conclude', TaskController.conclude);
 
