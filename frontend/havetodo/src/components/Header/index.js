@@ -3,7 +3,7 @@ import * as S from './style';
 
 import sino from '../../assets/sino.svg';
 
-function Header({haveLate, clickNotification, color, openTask}) {
+function Header({haveLate, clickNotification, color, openTask, openSync}) {
 
     const [sideBar, setSidebar] = useState(false);
     const showSidebar = () => setSidebar(!sideBar);
@@ -24,7 +24,7 @@ function Header({haveLate, clickNotification, color, openTask}) {
                     <ul>
                         <li><a className="active">Home</a></li>
                         <li><a onClick={openTask}>Nova Tarefa</a></li>
-                        <li><a href="#">Sincronize Celular</a></li>
+                        <li><a onClick={openSync}>Sincronize Celular</a></li>
                     </ul>
 
                     <h1>Have<span>Todo</span></h1>

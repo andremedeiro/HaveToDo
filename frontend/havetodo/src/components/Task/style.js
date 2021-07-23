@@ -8,7 +8,8 @@ export const Container = styled.div `
     background: #F5F5F1;
     border-radius: 5px;
     transition: 0.3s;
-    border: 3px solid ${props => props.state || 'var(--azul)'};;
+    border: 3px solid ${props => props.state || 'var(--azul)'};
+    overflow: hidden;
 
     h3 {
         margin:0;
